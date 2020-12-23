@@ -1,6 +1,10 @@
 #vscode files
 .vscode/
 
+#sample data files
+.sample_data/
+.sample_data.rar
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
