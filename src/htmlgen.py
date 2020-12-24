@@ -1,25 +1,25 @@
 from typing import List
 
+# TODO: fix class keyword appearing when no classes where provided
 
-class HtmlElementFactory:
+
+class HtmlElementStringFactory:
     @staticmethod
     def image_element(classes: List[str], src: str, alt: str = None) -> str:
-        result = (
-            f'<img class="{HtmlElementFactory.__unpack_classes(classes)}" src={src} '
-        )
+        result = f'<img class="{HtmlElementStringFactory.__unpack_classes(classes)}" src="{src}"" '
         result += f'alt="{alt}"' if alt is not None else ""
         result += " />"
         return result
 
     @staticmethod
     def video_element(classes: List[str], src: str) -> str:
-        result = f'<video class="{HtmlElementFactory.__unpack_classes(classes)}">'
+        result = f'<video class="{HtmlElementStringFactory.__unpack_classes(classes)}">'
         result += f'<source src={src} type="video/{src.split(".")[-1]}" /></video>'
         return result
 
     @staticmethod
     def list_element(classes: List[str], html: str) -> str:
-        return f'<li class="{HtmlElementFactory.__unpack_classes(classes)}">{html}</li>'
+        return f'<li class="{HtmlElementStringFactory.__unpack_classes(classes)}">{html}</li>'
 
     @staticmethod
     def header(css_path: str, title: str) -> str:
@@ -32,18 +32,18 @@ class HtmlElementFactory:
 
     @staticmethod
     def body(classes: List[str], elements: List[str]) -> str:
-        return HtmlElementFactory.wrap_with_element("body", elements, classes)
+        return HtmlElementStringFactory.wrap_with_element("body", elements, classes)
 
     @staticmethod
     def footer(classes: List[str], elements: List[str]) -> str:
-        return HtmlElementFactory.wrap_with_element("footer", elements, classes)
+        return HtmlElementStringFactory.wrap_with_element("footer", elements, classes)
 
     @staticmethod
     def wrap_with_element(
         wrapper: str, elements: List[str], wrapper_class_names: List[str] = None
     ):
         classes = (
-            HtmlElementFactory.__unpack_classes(wrapper_class_names)
+            HtmlElementStringFactory.__unpack_classes(wrapper_class_names)
             if wrapper_class_names is not None
             else []
         )
@@ -56,9 +56,9 @@ class HtmlElementFactory:
 
     @staticmethod
     def link_element(classes: List[str], href: str, children: List[str]) -> str:
-        result = f'<a class="{HtmlElementFactory.__unpack_classes(classes)}" '
+        result = f'<a class="{HtmlElementStringFactory.__unpack_classes(classes)}" '
         result += f'href="{href}">'
-        result += f"{HtmlElementFactory.__unpack_classes(children)}"
+        result += f"{HtmlElementStringFactory.__unpack_classes(children)}"
         result += "</a>"
         return result
 
@@ -69,3 +69,24 @@ class HtmlElementFactory:
             class_names += f"{class_name},"
         class_names = class_names[:-1]
         return class_names
+
+
+# body_div_image = HtmlElementStringFactory.wrap_with_element(
+#     wrapper="body",
+#     elements=[
+#         HtmlElementStringFactory.wrap_with_element(
+#             wrapper="div",
+#             elements=[
+#                 HtmlElementStringFactory.image_element(
+#                     classes=["sizeControll Mobile"],
+#                     src="./imageSource.jpg",
+#                     alt="an sample image",
+#                 )
+#             ],
+#             wrapper_class_names=["divClass testowa"],
+#         )
+#     ],
+#     wrapper_class_names=["bodyClasses"],
+# )
+
+# print(body_div_image)
