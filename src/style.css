@@ -1,0 +1,41 @@
+@media (max-width: 1000px) {
+  img,
+  video {
+    max-width: 98vw;
+    max-height: 98vh;
+    padding: 1vw;
+  }
+  .links {
+    max-width: 90vw;
+  }
+}
+@media (min-width: 1000px) {
+  img,
+  video {
+    max-width: 47vw;
+    max-height: 98vh;
+    padding: 1vw;
+  }
+  .links {
+    max-width: 30vw;
+  }
+}
+body {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+}
+a {
+  color: #000;
+  text-decoration: none;
+}
+a:visited {
+  color: #f54269;
+}
+a:active {
+  color: #ed2dd7;
+}
+.links {
+  padding: 10px 0;
+}

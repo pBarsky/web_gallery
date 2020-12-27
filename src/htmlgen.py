@@ -6,14 +6,21 @@ from typing import List
 class HtmlElementStringFactory:
     @staticmethod
     def image_element(classes: List[str], src: str, alt: str = None) -> str:
-        result = f'<img class="{HtmlElementStringFactory.__unpack_classes(classes)}" src="{src}"" '
+        result = f'<img class="{HtmlElementStringFactory.__unpack_classes(classes)}" src="{src}" '
         result += f'alt="{alt}"' if alt is not None else ""
         result += " />"
         return result
 
     @staticmethod
-    def video_element(classes: List[str], src: str) -> str:
-        result = f'<video class="{HtmlElementStringFactory.__unpack_classes(classes)}">'
+    def lazy_image_element(classes: List[str], src: str, alt: str = None) -> str:
+        result = f'<img class="{HtmlElementStringFactory.__unpack_classes(classes)}" data-src="{src}" '
+        result += f'alt="{alt}"' if alt is not None else ""
+        result += " />"
+        return result
+
+    @staticmethod
+    def video_element(classes: List[str], src: str, controls: bool = False) -> str:
+        result = f'<video class="{HtmlElementStringFactory.__unpack_classes(classes)}" {"controls" if controls else ""}>'
         result += f'<source src={src} type="video/{src.split(".")[-1]}" /></video>'
         return result
 
@@ -63,30 +70,19 @@ class HtmlElementStringFactory:
         return result
 
     @staticmethod
+    def script_element(src: str, content: List[str] = None) -> str:
+        if_src = f'src="{src}"' if src != "" else ""
+        stacked_content = ""
+        if content is not None:
+            for line in content:
+                stacked_content += line
+        result = f'<script type="text/javascript" {if_src}>{stacked_content}</script>'
+        return result
+
+    @staticmethod
     def __unpack_classes(classes: List[str]) -> str:
         class_names = ""
         for class_name in classes:
             class_names += f"{class_name},"
         class_names = class_names[:-1]
         return class_names
-
-
-# body_div_image = HtmlElementStringFactory.wrap_with_element(
-#     wrapper="body",
-#     elements=[
-#         HtmlElementStringFactory.wrap_with_element(
-#             wrapper="div",
-#             elements=[
-#                 HtmlElementStringFactory.image_element(
-#                     classes=["sizeControll Mobile"],
-#                     src="./imageSource.jpg",
-#                     alt="an sample image",
-#                 )
-#             ],
-#             wrapper_class_names=["divClass testowa"],
-#         )
-#     ],
-#     wrapper_class_names=["bodyClasses"],
-# )
-
-# print(body_div_image)

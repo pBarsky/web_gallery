@@ -5,10 +5,16 @@ from htmlgen import HtmlElementStringFactory as hesf
 
 
 class WebGallery:
-    def __init__(self, root_path: str, css_file_name: str = "style.css") -> None:
+    def __init__(
+        self,
+        root_path: str,
+        css_file_name: str = "style.css",
+        js_file_name: str = "index.js",
+    ) -> None:
         self.indexer = FileIndexer(root_path)
         self.root_path = root_path
         self.css_file_name = css_file_name
+        self.js_file_name = js_file_name
 
     def prepare_file_tree(self):
         self.indexer.traverse()
@@ -41,12 +47,21 @@ class WebGallery:
             # print(f"{file_indent}{path.join(dir_path,file)}")
         with open(path.join(self.root_path, dir_path, "index.html"), "w") as html_file:
             html_file.write("<html>")
-            for link in links:
-                html_file.write(hesf.link_element([""], link, [link]))
+            html_file.write(
+                hesf.header(path.relpath(path.abspath("/" + self.css_file_name)), "aaa")
+            )
+            writeable_links = hesf.wrap_with_element("ol", links, ["links"])
+            body: List[str] = []
+            body.append(writeable_links)
             for file in files:
-                html_file.write(
-                    hesf.image_element([""], "\\".join(file.split("\\")[level:]))
-                )
+                body.append(self.__image_or_video(file, level))
+            body.append(
+                hesf.script_element(path.relpath(path.abspath("/" + "lazyload.min.js")))
+            )
+            body.append(
+                hesf.script_element(path.relpath(path.abspath("/" + self.js_file_name)))
+            )
+            html_file.writelines(body)
             html_file.write("</html>")
 
     def make_css_file(self):
@@ -54,9 +69,29 @@ class WebGallery:
             with open(r"./src/style.css") as copy_css:
                 file.write(copy_css.read())
 
+    def make_js_files(self) -> None:
+        with open(path.join(self.root_path, self.js_file_name), "w") as file:
+            with open(r"./src/index.js") as copy_js:
+                file.write(copy_js.read())
+        with open(path.join(self.root_path, "lazyload.min.js"), "w") as file:
+            with open(r"./src/lazyload.min.js") as copy_js:
+                file.write(copy_js.read())
 
-# tester = WebGallery("test")
-tester = WebGallery(".sample_data")
-tester.prepare_file_tree()
-tester.make_menus()
-# tester.make_css_file()
+    def make(self):
+        self.prepare_file_tree()
+        self.make_css_file()
+        self.make_js_files()
+        self.make_menus()
+
+    @staticmethod
+    def __image_or_video(file: str, level: int) -> str:
+        file_ext = path.splitext(file)[1].lower()
+        if file_ext in FileTypeExtensions.IMAGES:
+            return hesf.lazy_image_element(
+                ["lazy"], "\\".join(file.split("\\")[level:])
+            )
+        elif file_ext in FileTypeExtensions.VIDEOS:
+            return hesf.video_element(
+                ["lazy"], "\\".join(file.split("\\")[level:]), controls=True
+            )
+        return ""
