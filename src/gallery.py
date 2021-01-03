@@ -22,7 +22,7 @@ class WebGallery:
 
     def make_menus(self, dir_path: str = None, index: dict = None, level: int = 0):
         title = WebGallery.__get_title(dir_path)
-        links: List[str] = []
+        links: List[str] = [hesf.root_link(children=["HOME"]), hesf.back_link(dir_path)]
         if dir_path is None:
             dir_path = "."
         if index is None:

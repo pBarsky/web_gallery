@@ -5,28 +5,46 @@ from typing import List
 
 class HtmlElementStringFactory:
     @staticmethod
-    def image_element(classes: List[str], src: str, alt: str = None) -> str:
-        result = f'<img class="{HtmlElementStringFactory.__unpack_classes(classes)}" src="{src}" '
+    def image_element(
+        classes: List[str] = None, src: str = "\\", alt: str = None
+    ) -> str:
+        class_string = HtmlElementStringFactory.make_class_string(classes)
+        result = f'<img {class_string}" src="{src}" '
         result += f'alt="{alt}"' if alt is not None else ""
         result += " />"
         return result
 
     @staticmethod
     def lazy_image_element(classes: List[str], src: str, alt: str = None) -> str:
-        result = f'<img class="{HtmlElementStringFactory.__unpack_classes(classes)}" data-src="{src}" '
+        class_string = HtmlElementStringFactory.make_class_string(classes)
+        result = f'<img {class_string}" data-src="{src}" '
         result += f'alt="{alt}"' if alt is not None else ""
         result += " />"
         return result
 
     @staticmethod
-    def video_element(classes: List[str], src: str, controls: bool = False) -> str:
-        result = f'<video class="{HtmlElementStringFactory.__unpack_classes(classes)}" {"controls" if controls else ""}>'
+    def video_element(
+        classes: List[str] = None, src: str = "\\", controls: bool = False
+    ) -> str:
+        class_string = HtmlElementStringFactory.make_class_string(classes)
+        result = f'<video {class_string} {"controls" if controls else ""}>'
         result += f'<source src={src} type="video/{src.split(".")[-1]}" /></video>'
         return result
 
     @staticmethod
+    def make_class_string(classes: List[str] = None) -> str:
+        return (
+            f'class="{HtmlElementStringFactory.__unpack_classes(classes)}"'
+            if classes is not None
+            else ""
+        )
+
+    @staticmethod
     def list_element(classes: List[str], html: str) -> str:
-        return f'<li class="{HtmlElementStringFactory.__unpack_classes(classes)}">{html}</li>'
+        class_string = class_string = HtmlElementStringFactory.make_class_string(
+            classes
+        )
+        return f'<li {class_string}">{html}</li>'
 
     @staticmethod
     def header(css_path: str, title: str) -> str:
@@ -39,10 +57,8 @@ class HtmlElementStringFactory:
 
     @staticmethod
     def self_closing(element: str, classes: List[str] = None) -> str:
-        classNames = None
-        if classes is not None:
-            classNames = f'class="{HtmlElementStringFactory.__unpack_classes(classes)}"'
-        return f"<{element} {classNames if classNames is not None else ''} />"
+        class_string = HtmlElementStringFactory.make_class_string(classes)
+        return f"<{element} {class_string}/>"
 
     @staticmethod
     def body(classes: List[str], elements: List[str]) -> str:
@@ -56,25 +72,27 @@ class HtmlElementStringFactory:
     def wrap_with_element(
         wrapper: str, elements: List[str], wrapper_class_names: List[str] = None
     ):
-        classes = (
-            HtmlElementStringFactory.__unpack_classes(wrapper_class_names)
-            if wrapper_class_names is not None
-            else []
-        )
-        class_strings = f'class="{classes}"' if len(classes) != 0 else ""
-        result = f"<{wrapper} {class_strings}>"
+        class_string = HtmlElementStringFactory.make_class_string(wrapper_class_names)
+        result = f"<{wrapper} {class_string}>"
         for el in elements:
             result += str(el)
         result += f"</{wrapper}>"
         return result
 
     @staticmethod
-    def link_element(classes: List[str], href: str, children: List[str]) -> str:
-        result = f'<a class="{HtmlElementStringFactory.__unpack_classes(classes)}" '
+    def link_element(
+        classes: List[str] = None, href: str = "", children: List[str] = [""]
+    ) -> str:
+        class_string = HtmlElementStringFactory.make_class_string(classes)
+        result = f"<a {class_string}"
         result += f'href="{href}">'
         result += f"{HtmlElementStringFactory.__unpack_classes(children)}"
         result += "</a>"
         return result
+
+    @staticmethod
+    def root_link(children: List[str], classes: List[str] = None) -> str:
+        return HtmlElementStringFactory.link_element(classes, "\\", children)
 
     @staticmethod
     def script_element(src: str, content: List[str] = None) -> str:
@@ -85,6 +103,18 @@ class HtmlElementStringFactory:
                 stacked_content += line
         result = f'<script type="text/javascript" {if_src}>{stacked_content}</script>'
         return result
+
+    @staticmethod
+    def back_link(dir_path: str = None) -> str:
+        if dir_path is None:
+            return ""
+
+        url = [""]
+        url.extend([*dir_path.split("\\")[1:-1]])
+
+        return HtmlElementStringFactory.link_element(
+            href="\\".join(url), children=["BACK"]
+        )
 
     @staticmethod
     def __unpack_classes(classes: List[str]) -> str:
