@@ -53,15 +53,37 @@ class WebGallery:
             writeable_links = hesf.wrap_with_element("ol", links, ["links"])
             body: List[str] = []
             body.append(writeable_links)
-            for file in files:
-                body.append(self.__image_or_video(file, level))
+            body.append(hesf.self_closing("hr"))
+            compiled_files = [self.__image_or_video(file, level) for file in files]
+            showable_files = [file for file in compiled_files if file != ""]
+            number_of_files = len(showable_files)
+            images_with_labels = [
+                hesf.wrap_with_element(
+                    wrapper_class_names=["wrapper flex flex-centered flex-wrap"],
+                    wrapper="div",
+                    elements=[
+                        hesf.wrap_with_element(
+                            "p", elements=[f"{iter[0]+1}/{number_of_files}"]
+                        ),
+                        iter[1],
+                    ],
+                )
+                for iter in zip(range(number_of_files), showable_files)
+            ]
+            body.append(
+                hesf.wrap_with_element(
+                    "div",
+                    images_with_labels,
+                    ["files", "flex flex-centered flex-wrap"],
+                )
+            )
             body.append(
                 hesf.script_element(path.relpath(path.abspath("/" + "lazyload.min.js")))
             )
             body.append(
                 hesf.script_element(path.relpath(path.abspath("/" + self.js_file_name)))
             )
-            html_file.writelines(body)
+            html_file.writelines(hesf.wrap_with_element("body", body))
             html_file.write("</html>")
 
     def make_css_file(self):
@@ -88,10 +110,12 @@ class WebGallery:
         file_ext = path.splitext(file)[1].lower()
         if file_ext in FileTypeExtensions.IMAGES:
             return hesf.lazy_image_element(
-                ["lazy"], "\\".join(file.split("\\")[level:])
+                ["lazy", "file"], "\\".join(file.split("\\")[level:])
             )
         elif file_ext in FileTypeExtensions.VIDEOS:
             return hesf.video_element(
-                ["lazy"], "\\".join(file.split("\\")[level:]), controls=True
+                ["lazy", "file"],
+                "\\".join(file.split("\\")[level:]),
+                controls=True,
             )
         return ""

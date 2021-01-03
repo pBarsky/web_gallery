@@ -38,6 +38,13 @@ class HtmlElementStringFactory:
         return result
 
     @staticmethod
+    def self_closing(element: str, classes: List[str] = None) -> str:
+        classNames = None
+        if classes is not None:
+            classNames = f'class="{HtmlElementStringFactory.__unpack_classes(classes)}"'
+        return f"<{element} {classNames if classNames is not None else ''} />"
+
+    @staticmethod
     def body(classes: List[str], elements: List[str]) -> str:
         return HtmlElementStringFactory.wrap_with_element("body", elements, classes)
 
@@ -54,10 +61,10 @@ class HtmlElementStringFactory:
             if wrapper_class_names is not None
             else []
         )
-        class_strings = f'class="{classes}"' if classes is not [] else ""
+        class_strings = f'class="{classes}"' if len(classes) != 0 else ""
         result = f"<{wrapper} {class_strings}>"
         for el in elements:
-            result += el
+            result += str(el)
         result += f"</{wrapper}>"
         return result
 
@@ -83,6 +90,6 @@ class HtmlElementStringFactory:
     def __unpack_classes(classes: List[str]) -> str:
         class_names = ""
         for class_name in classes:
-            class_names += f"{class_name},"
+            class_names += f"{class_name} "
         class_names = class_names[:-1]
         return class_names
