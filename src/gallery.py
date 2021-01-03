@@ -21,11 +21,8 @@ class WebGallery:
         self.indexer.dump_to_json(path.join(self.root_path, "tree.json"))
 
     def make_menus(self, dir_path: str = None, index: dict = None, level: int = 0):
-        # separator = "\t"
-        # indent = separator * level
-        # file_indent = separator * (level + 1)
+        title = WebGallery.__get_title(dir_path)
         links: List[str] = []
-        files: List[str] = []
         if dir_path is None:
             dir_path = "."
         if index is None:
@@ -38,17 +35,14 @@ class WebGallery:
             links.append(path.join(dir_path, entry))
             self.make_menus(path.join(dir_path, entry), index[entry], level + 1)
 
-        directory_files = index.get("files", None)
-        if directory_files is None:
-            return
-        # print(f"{indent}{dir_path}/[Files]")
-        for file in directory_files:
-            files.append(path.join(dir_path, file))
-            # print(f"{file_indent}{path.join(dir_path,file)}")
-        with open(path.join(self.root_path, dir_path, "index.html"), "w") as html_file:
+        files = WebGallery.__get_files_from_directory(dir_path, index)
+
+        with open(
+            path.join(self.root_path, dir_path, "index.html"), "w", encoding="utf-8"
+        ) as html_file:
             html_file.write("<html>")
             html_file.write(
-                hesf.header(path.relpath(path.abspath("/" + self.css_file_name)), "aaa")
+                hesf.header(path.relpath(path.abspath("/" + self.css_file_name)), title)
             )
             writeable_links = hesf.wrap_with_element("ol", links, ["links"])
             body: List[str] = []
@@ -77,16 +71,32 @@ class WebGallery:
                     ["files", "flex flex-centered flex-wrap"],
                 )
             )
-            body.append(
-                hesf.script_element(path.relpath(path.abspath("/" + "lazyload.min.js")))
-            )
-            body.append(
-                hesf.script_element(path.relpath(path.abspath("/" + self.js_file_name)))
-            )
+            self.add_js_files(body)
             html_file.writelines(hesf.wrap_with_element("body", body))
             html_file.write("</html>")
 
-    def make_css_file(self):
+    def add_js_files(self, element: List[str]) -> None:
+        element.append(
+            hesf.script_element(path.relpath(path.abspath("/" + "lazyload.min.js")))
+        )
+        element.append(
+            hesf.script_element(path.relpath(path.abspath("/" + self.js_file_name)))
+        )
+
+    @staticmethod
+    def __get_title(dir_path: str = None) -> str:
+        return dir_path.split("\\")[-1] if dir_path is not None else "Web Gallery"
+
+    @staticmethod
+    def __get_files_from_directory(dir_path: str, index: dict) -> List[str]:
+        files: List[str] = []
+        directory_files = index.get("files", None)
+        if directory_files is not None:
+            for file in directory_files:
+                files.append(path.join(dir_path, file))
+        return files
+
+    def make_css_file(self) -> None:
         with open(path.join(self.root_path, self.css_file_name), "w") as file:
             with open(r"./src/style.css") as copy_css:
                 file.write(copy_css.read())
