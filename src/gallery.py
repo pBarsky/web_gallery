@@ -22,7 +22,13 @@ class WebGallery:
 
     def make_menus(self, dir_path: str = None, index: dict = None, level: int = 0):
         title = WebGallery.__get_title(dir_path)
-        links: List[str] = [hesf.root_link(children=["HOME"]), hesf.back_link(dir_path)]
+        links: List[str] = [hesf.root_link(children=[hesf.list_element(html="HOME")])]
+        back_link = hesf.back_link(
+            dir_path=dir_path, children=[hesf.list_element(html="BACK")]
+        )
+        if back_link != "":
+            links.append(back_link)
+
         if dir_path is None:
             dir_path = "."
         if index is None:
@@ -32,8 +38,10 @@ class WebGallery:
         for entry in index:
             if entry == "files":
                 continue
-            links.append(path.join(dir_path, entry))
-            self.make_menus(path.join(dir_path, entry), index[entry], level + 1)
+            links.append(
+                hesf.link_element(href=entry, children=[hesf.list_element(html=entry)])
+            )
+            self.make_menus(path.join(dir_path, entry), index[entry], level)
 
         files = WebGallery.__get_files_from_directory(dir_path, index)
 

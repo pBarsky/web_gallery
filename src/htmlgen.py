@@ -40,7 +40,7 @@ class HtmlElementStringFactory:
         )
 
     @staticmethod
-    def list_element(classes: List[str], html: str) -> str:
+    def list_element(classes: List[str] = None, html: str = "") -> str:
         class_string = class_string = HtmlElementStringFactory.make_class_string(
             classes
         )
@@ -105,7 +105,7 @@ class HtmlElementStringFactory:
         return result
 
     @staticmethod
-    def back_link(dir_path: str = None) -> str:
+    def back_link(children: List[str], dir_path: str = None) -> str:
         if dir_path is None:
             return ""
 
@@ -113,7 +113,7 @@ class HtmlElementStringFactory:
         url.extend([*dir_path.split("\\")[1:-1]])
 
         return HtmlElementStringFactory.link_element(
-            href="\\".join(url), children=["BACK"]
+            href="\\".join(url), children=children
         )
 
     @staticmethod
