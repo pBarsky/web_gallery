@@ -1,3 +1,4 @@
+from os import stat_result
 from typing import List
 
 # TODO: fix class keyword appearing when no classes where provided
@@ -91,6 +92,11 @@ class HtmlElementStringFactory:
         return result
 
     @staticmethod
+    def button_element(classes: List[str] = None, html: str = ""):
+        class_string = HtmlElementStringFactory.make_class_string(classes)
+        return f"<button {class_string}>{html}</button>"
+
+    @staticmethod
     def root_link(children: List[str], classes: List[str] = None) -> str:
         return HtmlElementStringFactory.link_element(classes, "\\", children)
 
@@ -109,9 +115,11 @@ class HtmlElementStringFactory:
         if dir_path is None:
             return ""
 
-        url = [""]
-        url.extend([*dir_path.split("\\")[1:-1]])
-
+        test_url = [""]
+        test_url.extend([*dir_path.split("\\")[1:-1]])
+        url = test_url
+        if test_url == [""]:
+            url = ["\\"]
         return HtmlElementStringFactory.link_element(
             href="\\".join(url), children=children
         )

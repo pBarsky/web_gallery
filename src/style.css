@@ -5,6 +5,7 @@
   --white: #e0e0e0;
   --red: #e03636;
   --light-red: #e96f6f;
+  --dark-gray: #272727;
 }
 
 html {
@@ -25,6 +26,7 @@ html {
 a {
   color: var(--red);
   text-decoration: none;
+  cursor: pointer;
 }
 
 .links a:visited,
@@ -122,4 +124,20 @@ hr {
 
 .hidden {
   display: none;
+}
+
+.action-button {
+  border: 3px solid var(--light-gray);
+  color: var(--red);
+  width: 150px;
+  height: 100px;
+  cursor: pointer;
+}
+
+.show-button {
+  background-color: var(--dark-gray);
+}
+
+.hide-button {
+  background-color: var(--black);
 }

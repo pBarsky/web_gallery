@@ -22,7 +22,9 @@ class WebGallery:
 
     def make_menus(self, dir_path: str = None, index: dict = None, level: int = 0):
         title = WebGallery.__get_title(dir_path)
-        links: List[str] = [hesf.root_link(children=[hesf.list_element(html="HOME")])]
+        links: List[str] = []
+        if dir_path is not None:
+            links.append(hesf.root_link(children=[hesf.list_element(html="HOME")]))
         back_link = hesf.back_link(
             dir_path=dir_path, children=[hesf.list_element(html="BACK")]
         )
@@ -56,6 +58,11 @@ class WebGallery:
             body: List[str] = []
             body.append(writeable_links)
             body.append(hesf.self_closing("hr"))
+            body.append(
+                hesf.button_element(
+                    classes=["action-button show-button"], html="SHOW/HIDE FILES"
+                )
+            )
             compiled_files = [self.__image_or_video(file, level) for file in files]
             showable_files = [file for file in compiled_files if file != ""]
             number_of_files = len(showable_files)
@@ -76,9 +83,10 @@ class WebGallery:
                 hesf.wrap_with_element(
                     "div",
                     images_with_labels,
-                    ["files", "flex flex-centered flex-wrap"],
+                    ["files", "flex flex-centered flex-wrap hidden"],
                 )
             )
+
             self.add_js_files(body)
             html_file.writelines(hesf.wrap_with_element("body", body))
             html_file.write("</html>")
