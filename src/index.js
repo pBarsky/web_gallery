@@ -7,3 +7,8 @@ showHideButton.addEventListener("click", () => {
   showHideButton.classList.toggle("show-button");
   showHideButton.classList.toggle("hide-button");
 });
+
+imagesOrVideos = document.querySelectorAll("img, video");
+imagesOrVideos.forEach((el) => {
+  el.addEventListener("click", () => (window.location.href = el.src));
+});
