@@ -57,12 +57,7 @@ class WebGallery:
             writeable_links = hesf.wrap_with_element("ol", links, ["links"])
             body: List[str] = []
             body.append(writeable_links)
-            body.append(hesf.self_closing("hr"))
-            body.append(
-                hesf.button_element(
-                    classes=["action-button show-button"], html="SHOW/HIDE FILES"
-                )
-            )
+
             compiled_files = [self.__image_or_video(file, level) for file in files]
             showable_files = [file for file in compiled_files if file != ""]
             number_of_files = len(showable_files)
@@ -79,6 +74,15 @@ class WebGallery:
                 )
                 for iter in zip(range(number_of_files), showable_files)
             ]
+
+            if images_with_labels:
+                body.append(hesf.self_closing("hr"))
+                body.append(
+                    hesf.button_element(
+                        classes=["action-button show-button"], html="SHOW/HIDE FILES"
+                    )
+                )
+
             body.append(
                 hesf.wrap_with_element(
                     "div",
