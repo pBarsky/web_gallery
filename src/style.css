@@ -82,36 +82,18 @@ hr {
 }
 
 .files .wrapper {
-  max-width: 40vw;
-  max-height: 80vh;
   display: inline-block;
   box-sizing: border-box;
-  border-left: 2px solid var(--light-gray);
   padding: 10px;
+  max-width: 100vw;
+  max-height: 90vh;
 }
 
 .files .wrapper img,
 .files .wrapper video {
   display: block;
-  max-width: 39vw;
-  max-height: 70vh;
-}
-
-@media (max-width: 1023px) {
-  .files .wrapper {
-    max-width: 100vw;
-    max-height: 90vh;
-    border: none;
-    margin: 0;
-    padding: 0;
-  }
-  .files .wrapper img,
-  .files .wrapper video {
-    display: block;
-    max-width: 100vw;
-    max-height: 80vh;
-    border: none;
-  }
+  max-width: 100vw;
+  max-height: 80vh;
 }
 
 .flex {
