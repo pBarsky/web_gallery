@@ -29,7 +29,7 @@ class HtmlElementStringFactory:
     ) -> str:
         class_string = HtmlElementStringFactory.make_class_string(classes)
         result = f'<video {class_string} {"controls" if controls else ""}>'
-        result += f'<source src={src} type="video/{src.split(".")[-1]}" /></video>'
+        result += f'<source src="{src}" type="video/{src.split(".")[-1]}" /></video>'
         return result
 
     @staticmethod
