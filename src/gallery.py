@@ -143,7 +143,7 @@ class WebGallery:
                 ["lazy", "file"], "\\".join(file.split("\\")[level:])
             )
         elif file_ext in FileTypeExtensions.VIDEOS:
-            return hesf.video_element(
+            return hesf.lazy_video_element(
                 ["lazy", "file"],
                 "\\".join(file.split("\\")[level:]),
                 controls=True,

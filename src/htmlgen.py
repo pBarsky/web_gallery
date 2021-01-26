@@ -33,6 +33,17 @@ class HtmlElementStringFactory:
         return result
 
     @staticmethod
+    def lazy_video_element(
+        classes: List[str] = None, src: str = "\\", controls: bool = False
+    ) -> str:
+        class_string = HtmlElementStringFactory.make_class_string(classes)
+        result = f'<video {class_string} {"controls" if controls else ""}>'
+        result += (
+            f'<source data-src="{src}" type="video/{src.split(".")[-1]}" /></video>'
+        )
+        return result
+
+    @staticmethod
     def make_class_string(classes: List[str] = None) -> str:
         return (
             f'class="{HtmlElementStringFactory.__unpack_classes(classes)}"'
