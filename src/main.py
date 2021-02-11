@@ -2,6 +2,7 @@ import gallery
 import sys
 from pathlib import Path
 from os import chdir
+from time import time
 
 
 def main():
@@ -15,9 +16,11 @@ def main():
         print(f"{file_path} is not a directory")
 
     chdir(source_dir)
-
+    t0 = time()
     gal = gallery.WebGallery(str(file_path))
     gal.make()
+    t1 = time()
+    print(f"Time elapsed: {t1-t0:.3}s")
 
 
 if __name__ == "__main__":
