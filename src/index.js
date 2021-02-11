@@ -10,5 +10,5 @@ showHideButton.addEventListener("click", () => {
 
 imagesOrVideos = document.querySelectorAll("img, video");
 imagesOrVideos.forEach((el) => {
-  el.addEventListener("click", () => (window.location.href = el.src));
+  el.addEventListener("click", () => (window.open(el.src, "_blank")));
 });
