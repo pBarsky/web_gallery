@@ -56,7 +56,7 @@ class HtmlElementStringFactory:
         class_string = class_string = HtmlElementStringFactory.make_class_string(
             classes
         )
-        return f'<li {class_string}">{html}</li>'
+        return f"<li {class_string}>{html}</li>"
 
     @staticmethod
     def header(css_path: str, title: str) -> str:
