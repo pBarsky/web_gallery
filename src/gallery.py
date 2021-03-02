@@ -40,8 +40,12 @@ class WebGallery:
         for entry in index:
             if entry == "files":
                 continue
+            no_of_files_in_dir = len(index[entry].get("files", [])) - 1
+            name = (
+                f"{entry} [{no_of_files_in_dir}]" if no_of_files_in_dir != 0 else entry
+            )
             links.append(
-                hesf.link_element(href=entry, children=[hesf.list_element(html=entry)])
+                hesf.link_element(href=entry, children=[hesf.list_element(html=name)])
             )
             self.make_menus(path.join(dir_path, entry), index[entry], level)
 

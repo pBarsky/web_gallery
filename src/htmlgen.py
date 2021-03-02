@@ -1,4 +1,3 @@
-from os import stat_result
 from typing import List
 
 # TODO: fix class keyword appearing when no classes where provided
