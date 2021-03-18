@@ -102,9 +102,10 @@ class HtmlElementStringFactory:
         return result
 
     @staticmethod
-    def button_element(classes: List[str] = None, html: str = ""):
+    def button_element(classes: List[str] = None, html: str = "", id=None):
         class_string = HtmlElementStringFactory.make_class_string(classes)
-        return f"<button {class_string}>{html}</button>"
+        id_string = f'id="{id}"' if id is not None else ""
+        return f"<button {class_string} {id_string}>{html}</button>"
 
     @staticmethod
     def root_link(children: List[str], classes: List[str] = None) -> str:

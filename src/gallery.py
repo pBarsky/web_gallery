@@ -1,15 +1,17 @@
-from typing import List
-from indexer import FileIndexer
 from os import path
+from typing import List
+
+from filetypes import FileTypeExtensions
 from htmlgen import HtmlElementStringFactory as hesf
+from indexer import FileIndexer
 
 
 class WebGallery:
     def __init__(
-        self,
-        root_path: str,
-        css_file_name: str = "style.css",
-        js_file_name: str = "index.js",
+            self,
+            root_path: str,
+            css_file_name: str = "style.css",
+            js_file_name: str = "index.js",
     ) -> None:
         self.indexer = FileIndexer(root_path)
         self.root_path = root_path
@@ -52,7 +54,7 @@ class WebGallery:
         files = WebGallery.__get_files_from_directory(dir_path, index)
 
         with open(
-            path.join(self.root_path, dir_path, "index.html"), "w", encoding="utf-8"
+                path.join(self.root_path, dir_path, "index.html"), "w", encoding="utf-8"
         ) as html_file:
             html_file.write("<html>")
             html_file.write(
@@ -71,7 +73,7 @@ class WebGallery:
                     wrapper="div",
                     elements=[
                         hesf.wrap_with_element(
-                            "p", elements=[f"{iter[0]+1}/{number_of_files}"]
+                            "p", elements=[f"{iter[0] + 1}/{number_of_files}"]
                         ),
                         iter[1],
                     ],
@@ -83,7 +85,16 @@ class WebGallery:
                 body.append(hesf.self_closing("hr"))
                 body.append(
                     hesf.button_element(
-                        classes=["action-button show-button"], html="SHOW/HIDE FILES"
+                        classes=["action-button show-button"],
+                        html="SHOW/HIDE FILES",
+                        id="show-button",
+                    )
+                )
+                body.append(
+                    hesf.button_element(
+                        classes=["action-button change-size-button"],
+                        html="CHANGE SIZE",
+                        id="change-size-button",
                     )
                 )
 
@@ -91,7 +102,7 @@ class WebGallery:
                 hesf.wrap_with_element(
                     "div",
                     images_with_labels,
-                    ["files", "flex flex-centered flex-wrap hidden"],
+                    ["files", "flex flex-centered flex-wrap"],
                 )
             )
 
