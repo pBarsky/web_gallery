@@ -12,15 +12,24 @@ class FileIndexer:
             idx = self.index
         if dir_path == "":
             dir_path = self.root_path
+        self.scan_directory(dir_path, idx)
+
+    def scan_directory(self, dir_path, idx):
         with scandir(dir_path) as it:
             for entry in it:
-                if entry.is_file():
-                    if idx.get("files", []) == []:
-                        idx["files"] = []
-                    idx["files"].append(entry.name)
-                elif entry.is_dir():
-                    idx[entry.name] = {}
-                    self.traverse(path.join(dir_path, entry.name), idx[entry.name])
+                self.handle_file(entry, idx)
+                self.handle_subdir(dir_path, entry, idx)
+
+    def handle_subdir(self, dir_path, entry, idx):
+        if entry.is_dir():
+            idx[entry.name] = {}
+            self.traverse(path.join(dir_path, entry.name), idx[entry.name])
+
+    def handle_file(self, entry, idx):
+        if entry.is_file():
+            if idx.get("files", []) == []:
+                idx["files"] = []
+            idx["files"].append(entry.name)
 
     def dump_to_json(self, dump_path: str) -> bool:
         try:
