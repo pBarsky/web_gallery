@@ -13,18 +13,21 @@ class WebGallery:
             root_path: str,
             css_file_name: str = "style.css",
             js_file_name: str = "index.js",
+            verbose: bool = False
     ) -> None:
         self.indexer = FileIndexer(root_path)
         self.root_path = root_path
         self.css_file_name = css_file_name
         self.js_file_name = js_file_name
+        self.verbose = verbose
+        self.log = None
 
     def prepare_file_tree(self):
         self.indexer.traverse()
         self.indexer.dump_to_json(path.join(self.root_path, "tree.json"))
 
     def make_menus(self, dir_path: str = None, index: dict = None, level: int = 0):
-        logging.info(dir_path)
+        self.log(dir_path)
         title = get_title(dir_path)
         links: List[str] = []
         make_back_buttons(dir_path, links)
@@ -128,10 +131,14 @@ class WebGallery:
                 file.write(copy_js.read())
 
     def make(self):
+        self.prepare_logger()
         self.prepare_file_tree()
         self.make_css_file()
         self.make_js_files()
         self.make_menus()
+
+    def prepare_logger(self):
+        self.log = logging.info if self.verbose else lambda _: _
 
 
 def image_or_video(file: str, level: int) -> str:
