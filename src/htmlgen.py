@@ -17,7 +17,7 @@ class HtmlElementStringFactory:
     @staticmethod
     def lazy_image_element(classes: List[str], src: str, alt: str = None) -> str:
         class_string = HtmlElementStringFactory.make_class_string(classes)
-        result = f'<img {class_string}" data-src="{src}" '
+        result = f'<img {class_string} data-src="{src}" '
         result += f'alt="{alt}"' if alt is not None else ""
         result += " />"
         return result

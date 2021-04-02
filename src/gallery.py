@@ -142,12 +142,12 @@ class WebGallery:
 
 
 def image_or_video(file: str, level: int) -> str:
-    file_ext = path.splitext(file)[1].lower()
-    if file_ext in FileTypeExtensions.IMAGES:
+    file_ext_no_dot = path.splitext(file)[1].lower()[1:]
+    if file_ext_no_dot in FileTypeExtensions.IMAGES:
         return Hesf.lazy_image_element(
             ["lazy", "file"], "\\".join(file.split("\\")[level:])
         )
-    elif file_ext in FileTypeExtensions.VIDEOS:
+    elif file_ext_no_dot in FileTypeExtensions.VIDEOS:
         return Hesf.lazy_video_element(
             ["lazy", "file"],
             "\\".join(file.split("\\")[level:]),

@@ -1,12 +1,10 @@
 import argparse
 import logging
-import sys
 from os import chdir
 from pathlib import Path
 from time import time
 
 import gallery
-
 
 def main():
     logging.getLogger().setLevel(logging.INFO)
