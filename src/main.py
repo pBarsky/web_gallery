@@ -5,22 +5,25 @@ from pathlib import Path
 from time import time
 
 import gallery
+from logger import Logger
+
 
 def main():
-    logging.getLogger().setLevel(logging.INFO)
-
     args = parse_opts()
-
     file_path = Path.resolve(Path.absolute(Path(*args.path)))
 
     source_dir = Path.resolve((Path(__file__).parent.parent))
     if not Path.is_dir(file_path):
         logging.error(f"{file_path} is not a directory")
-    logging.info("Changing directory...")
+    Logger(verbose_logging=args.verbose, path=str(file_path))
+
+    logging.debug(f"Changing directory... to {source_dir=}")
     chdir(source_dir)
-    logging.info("Starting indexing...")
+    logging.debug("Starting indexing...")
+
     t0 = time()
-    gal = gallery.WebGallery(str(file_path), verbose=args.verbose)
+
+    gal = gallery.WebGallery(str(file_path))
     gal.make()
     t1 = time()
     logging.debug(f"Time elapsed: {t1 - t0:.3}s")
